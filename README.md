@@ -1,4 +1,4 @@
-# Extension Typo3 pour OpenAgenda
+# Projet d'extension Typo3 pour OpenAgenda
 
 ## Contexte
 
