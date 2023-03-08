@@ -100,4 +100,4 @@ Un traitement sera nécessaire pour ventiler les horaires selon les mois puis le
 
 ### Bloc de prévisualisation
 
-Les sites intégrant une page agenda affichent fréquemment un bloc sur la page d'accueil présentant une sélection d'événements. Souvent les prochains événements à venir. L'extension doit permettre à l'intégrateur de placer un tel bloc lié à un des agendas intégrés sur une page dédiée du site. Un clic sur un des événements présentés par le bloc renvoie l'utilisateur vers la vue détaillée de l'événement dans le contexte de l'agenda.
+Les sites intégrant une page agenda affichent fréquemment un bloc sur la page d'accueil présentant une sélection d'événements. Souvent les prochains événements à venir. L'extension doit permettre à l'intégrateur de placer un tel bloc lié à un des agendas intégrés sur une page dédiée du site. Un clic sur un des événements présentés par le bloc renvoie l'utilisateur vers la vue détaillée de l'événement dans le contexte de l'agenda. Voir comme exemple le segment Agenda de la page suivante: https://www.saint-quentin-en-yvelines.fr/fr
