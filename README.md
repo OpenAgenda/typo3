@@ -97,3 +97,7 @@ Ces widgets devront être présents sur les gabarits par défaut.
 Les horaires s'affichent sur une vue les listant par mois, similairement à ce qui est proposé sur [OpenAgenda](https://openagenda.com/sqy/events/au-fil-des-mots-932363), où [ici](https://www.saint-quentin-en-yvelines.fr/fr/agenda-de-saint-quentin-en-yvelines/au-fil-des-mots-932363?oac=eyJpbmRleCI6MCwidG90YWwiOjE5MSwiZmlsdGVycyI6eyJyZWxhdGl2ZSI6WyJjdXJyZW50IiwidXBjb21pbmciXSwiZGV0YWlsZWQiOjF9fQ%3D%3D)
 
 Un traitement sera nécessaire pour ventiler les horaires selon les mois puis les semaines. La fonction php effectuant ce traitement pour le module Drupal [OpenagendaEventProcessor](https://github.com/OpenAgenda/drupal/blob/master/openagenda/src/OpenagendaEventProcessor.php) pourra être reprise pour ce traitement.
+
+### Bloc de prévisualisation
+
+Les sites intégrant une page agenda affichent fréquemment un bloc sur la page d'accueil présentant une sélection d'événements. Souvent les prochains événements à venir. L'extension doit permettre à l'intégrateur de placer un tel bloc lié à un des agendas intégrés sur une page dédiée du site. Un clic sur un des événements présentés par le bloc renvoie l'utilisateur vers la vue détaillée de l'événement dans le contexte de l'agenda.
