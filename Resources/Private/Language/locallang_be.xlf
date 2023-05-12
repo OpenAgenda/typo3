@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="openagenda">
+		<header />
+		<body>
+			<trans-unit id="public_key">
+				<source>OpenAgenda account public key</source>
+			</trans-unit>
+			<trans-unit id="include_embedded">
+				<source>Include embedded content</source>
+			</trans-unit>
+			<trans-unit id="current">
+				<source>Only current and upcoming events</source>
+			</trans-unit>
+			<trans-unit id="default_style">
+				<source>OpenAgenda default style</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

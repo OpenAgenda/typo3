@@ -1,0 +1,11 @@
+# cat=basic/enable; type=string; label=LLL:EXT:openagenda/Resources/Private/Language/locallang_be.xlf:public_key
+public_key =
+
+# cat=basic/enable; type=boolean; label=LLL:EXT:openagenda/Resources/Private/Language/locallang_be.xlf:include_embedded
+include_embedded = FALSE
+
+# cat=basic/enable; type=boolean; label=LLL:EXT:openagenda/Resources/Private/Language/locallang_be.xlf:current
+current = FALSE
+
+# cat=basic/enable; type=string; label=LLL:EXT:openagenda/Resources/Private/Language/locallang_be.xlf:default_style
+default_style = agenda

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="fr" datatype="plaintext" original="messages" product-name="openagenda">
+        <header />
+        <body>
+            <trans-unit id="noEvent">
+                <target>Il n'y a aucun résultat correspondant à vos filtres de recherche.</target>
+            </trans-unit>
+            <trans-unit id="error">
+                <target>Une erreur est survenue.</target>
+            </trans-unit>
+            <trans-unit id="placeholder">
+                <target>Chercher dans l'agenda</target>
+            </trans-unit>
+            <trans-unit id="favorites">
+                <target>Favoris</target>
+            </trans-unit>
+            <trans-unit id="favoritesAddRemove">
+                <target>Favoris : ajouter ou supprimer.</target>
+            </trans-unit>
+            <trans-unit id="filter">
+                <target>Filtrer</target>
+            </trans-unit>
+            <trans-unit id="linkAgenda">
+                <target>Tout l'agenda</target>
+            </trans-unit>
+            <trans-unit id="backAgenda">
+                <target>Retour à l'agenda</target>
+            </trans-unit>
+            <trans-unit id="previous">
+                <target>Précédent</target>
+            </trans-unit>
+            <trans-unit id="next">
+                <target>Suivant</target>
+            </trans-unit>
+            <trans-unit id="searchWithMap">
+                <target>Chercher en déplaçant la carte</target>
+            </trans-unit>
+            <trans-unit id="placeholderSearch">
+                <target>Chercher dans l'agenda</target>
+            </trans-unit>
+            <trans-unit id="relativeTimingIn">
+                <target>Dans %s %s</target>
+            </trans-unit>
+            <trans-unit id="relativeTimingSince">
+                <target>Depuis %s %s</target>
+            </trans-unit>
+            <trans-unit id="minute">
+                <target>minute</target>
+            </trans-unit>
+            <trans-unit id="hour">
+                <target>heure</target>
+            </trans-unit>
+            <trans-unit id="day">
+                <target>jour</target>
+            </trans-unit>
+            <trans-unit id="week">
+                <target>semaine</target>
+            </trans-unit>
+            <trans-unit id="minutes">
+                <target>minutes</target>
+            </trans-unit>
+            <trans-unit id="hours">
+                <target>heures</target>
+            </trans-unit>
+            <trans-unit id="days">
+                <target>jours</target>
+            </trans-unit>
+            <trans-unit id="weeks">
+                <target>semaines</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

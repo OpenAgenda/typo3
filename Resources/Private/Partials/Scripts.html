@@ -1,0 +1,31 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true" lang="en">
+
+    <f:if condition="{config.default_style} == 'agenda'">
+        <f:then>
+            <f:asset.script identifier="openagenda" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-agenda.js" />
+        </f:then>
+    </f:if>
+
+    <script type="text/javascript">
+        <f:if condition="{event.location.latitude}">
+            const settingsOpenagendaEventLat = '{event.location.latitude}';
+        </f:if>
+        <f:if condition="{event.location.longitude}">
+            const settingsOpenagendaEventLon = '{event.location.longitude}';
+        </f:if>
+        <f:if condition="{settings.mapFilterTilesUri}">
+            const settingsOpenagendaMapTilesUrl = '{settings.mapFilterTilesUri}';
+        </f:if>
+        const settingsOpenagendaCalendarUid = {settings.calendarUid};
+        const settingsOpenagendaPreFilter = '{settings.preFilter}';
+        const settingsOpenagendamarkerUrl = '<f:uri.image src="EXT:openagenda/Resources/Public/Images/marker-icon.svg" />';
+        const settingsOpenagendaAjaxUrl = '{agendaUrlBase}?type=46304&settingsOpenagendaCalendarUid={settings.calendarUid}';
+        const settingsOpenagendaFiltersUrl = '{agendaUrlBase}?type=46305&settingsOpenagendaCalendarUid={settings.calendarUid}';
+        const settingsOpenagendaPage = {currentPage};
+        const settingsOpenagendaLanguageId = {languageId};
+        const settingsOpenagendaLanguage = '{language}';
+        const settingsOpenagendaColumns = {settings.columns};
+        const settingsOpenagendaEventsPerPage = '{settings.eventsPerPage}';
+    </script>
+</html>

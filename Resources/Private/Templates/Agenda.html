@@ -1,0 +1,94 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+    <f:layout name="General" />
+
+    <f:section name="main">
+        <f:asset.script identifier="jquery" src="https://code.jquery.com/jquery-3.6.4.min.js" />
+        <f:render partial="Styles" arguments="{_all}" />
+        <f:render partial="Scripts" arguments="{_all}" />
+        <f:asset.script identifier="reactfilters" src="https://unpkg.com/@openagenda/react-filters@2.8.4/dist/main.js" />
+        <f:asset.script identifier="filters" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-filters.js" />
+        <f:asset.script identifier="pager" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-pager.js" />
+
+        <div class="row">
+            <f:if condition="{erreur}">
+                <f:then>
+                    <f:translate key="error" extensionName="openagenda" />
+                </f:then>
+                <f:else>
+                    <div class="col-sm-9">
+                        <f:if condition="{settings.displayMapFilter}">
+                            <f:render partial="MapFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displayTotalFilter}">
+                            <f:render partial="TotalFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displayActiveFilter}">
+                            <f:render partial="ActiveFilters" />
+                        </f:if>
+                        <f:if condition="{total} > 0">
+                            <f:then>
+                                <div id="oa-agenda" class="oa-agenda">
+                                    <div id="oa-wrapper">
+                                            <div class="wbg exports">
+                                                <a
+                                                        role="button"
+                                                        href="https://openagenda.com/agendas/{agenda.uid}/events.v2.xlsx{f:if(condition: '{search_string}', then: '?{search_string}')}">xls</a>
+                                                <a
+                                                        role="button"
+                                                        href="https://openagenda.com/agendas/{agenda.uid}/events.v2.rss{f:if(condition: '{search_string}', then: '?{search_string}')}">rss</a>
+                                            </div>
+                                        <ul class="oa-list oa-list--x{columns}">
+                                            <f:for each="{events}" as="event">
+                                                <li class="oa-list__item">
+                                                    <f:render partial="Event" arguments="{event:event}" />
+                                                </li>
+                                            </f:for>
+                                        </ul>
+                                        <f:render partial="Pagination" arguments="{pagination: pagination.pagination, paginator: pagination.paginator, page:pagination.page, filtersUrl:filtersUrlPagination}" />
+                                    </div>
+                                </div>
+                            </f:then>
+                            <f:else>
+                                <f:translate key="noEvent" extensionName="openagenda" />
+                            </f:else>
+                        </f:if>
+                    </div>
+                    <div class="col-sm-3">
+                        <f:if condition="{settings.displayFavoritesFilter}">
+                            <f:render partial="FavoritesFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displaySearchFilter}">
+                            <f:render partial="SearchFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displayCitiesFilter}">
+                            <f:render partial="CitiesFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displayDateRangeFilter}">
+                            <f:render partial="DateRangeFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displayKeywordsFilter}">
+                            <f:render partial="KeywordsFilter" />
+                        </f:if>
+                        <f:if condition="{settings.displayAdditionnalFieldFilter}">
+                            <f:for each="{additionalFields}" as="additionalField">
+                                <f:render partial="AdditionalFieldFilter" arguments="{additionalField: additionalField}" />
+                            </f:for>
+                        </f:if>
+                        <f:if condition="{settings.displayRelativeFilter}">
+                            <f:render partial="RelativeFilter" />
+                        </f:if>
+                    </div>
+                </f:else>
+            </f:if>
+        </div>
+        <div class="overlay" id="loading" >
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status" >
+                    <span class="sr-only"></span>
+                </div>
+            </div>
+        </div>
+    </f:section>
+</html>

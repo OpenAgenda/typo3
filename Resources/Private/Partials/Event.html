@@ -1,0 +1,37 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true" lang="en">
+
+    <article id="event--{event.uid}" class="oa-event oa-event--list">
+        <div class="oa-event__wrapper">
+            <header class="oa-event__header">
+                <a href="{event.local_url}">
+                    <f:if condition="{event.image}">
+                        <f:then>
+                            <div class="oa-event-thumbnail" style="background-image: url({event.image.base}{event.image.filename})"></div>
+                        </f:then>
+                        <f:else>
+                            <div class="oa-event-thumbnail"></div>
+                        </f:else>
+                    </f:if>
+                </a>
+                <div class="oa-event-timing">{event.relative_timing}</div>
+                <f:if condition="{event.location.city}">
+                    <f:if condition="{event.location.city} != ''">
+                        <div class="oa-event-location">{event.location.city}</div>
+                    </f:if>
+                </f:if>
+                <div
+                        class="checkbox oa-event-favorite"
+                        data-oa-widget="favorites_{event.uid}"
+                        data-oa-widget-params="{&quot;eventUid&quot;:&quot;{event.uid}&quot;,&quot;name&quot;:&quot;favorite&quot;}">
+                    <span><f:translate key="favoritesAddRemove" extensionName="openagenda" /></span>
+                </div>
+            </header>
+            <h2 class="oa-event-title"><a class="oa-event-permalink" href="{event.local_url}">{event.title}</a></h2>
+            <div class="oa-event__content">
+                <div class="oa-event-daterange">{event.dateRange}</div>
+                <p class="oa-event-description oa-event-description--short">{event.description}</p>
+            </div>
+        </div>
+    </article>
+</html>

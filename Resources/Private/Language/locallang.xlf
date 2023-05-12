@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" product-name="openagenda">
+        <header />
+        <body>
+            <trans-unit id="noEvent">
+                <source>There are no event matching these search parameters.</source>
+            </trans-unit>
+            <trans-unit id="error">
+                <source>An error has occured.</source>
+            </trans-unit>
+            <trans-unit id="placeholder">
+                <source>Search</source>
+            </trans-unit>
+            <trans-unit id="favorites">
+                <source>Favorites</source>
+            </trans-unit>
+            <trans-unit id="favoritesAddRemove">
+                <source>Favorites: add or remove</source>
+            </trans-unit>
+            <trans-unit id="filter">
+                <source>Filter</source>
+            </trans-unit>
+            <trans-unit id="linkAgenda">
+                <source>All agenda</source>
+            </trans-unit>
+            <trans-unit id="backAgenda">
+                <source>Back to agenda</source>
+            </trans-unit>
+            <trans-unit id="previous">
+                <source>Previous</source>
+            </trans-unit>
+            <trans-unit id="next">
+                <source>Next</source>
+            </trans-unit>
+            <trans-unit id="searchWithMap">
+                <source>Search with map</source>
+            </trans-unit>
+            <trans-unit id="placeholderSearch">
+                <source>Search in this agenda</source>
+            </trans-unit>
+            <trans-unit id="relativeTimingIn">
+                <source>In %s %s</source>
+            </trans-unit>
+            <trans-unit id="relativeTimingSince">
+                <source>%s %s ago</source>
+            </trans-unit>
+            <trans-unit id="minute">
+                <source>minute</source>
+            </trans-unit>
+            <trans-unit id="hour">
+                <source>hour</source>
+            </trans-unit>
+            <trans-unit id="day">
+                <source>day</source>
+            </trans-unit>
+            <trans-unit id="week">
+                <source>week</source>
+            </trans-unit>
+            <trans-unit id="minutes">
+                <source>minutes</source>
+            </trans-unit>
+            <trans-unit id="hours">
+                <source>hours</source>
+            </trans-unit>
+            <trans-unit id="days">
+                <source>days</source>
+            </trans-unit>
+            <trans-unit id="weeks">
+                <source>weeks</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

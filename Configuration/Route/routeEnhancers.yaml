@@ -1,0 +1,8 @@
+routeEnhancers:
+  Openagenda:
+    type: Extbase
+    extension: Openagenda
+    plugin: Agenda
+    routes:
+      - { routePath: '/event/{event}', _controller: 'Openagenda::event' }
+    defaultController: 'Openagenda::index'

@@ -1,0 +1,97 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:layout name="General" />
+
+<f:section name="main">
+    <f:asset.script identifier="jquery" src="https://code.jquery.com/jquery-3.6.4.min.js" />
+    <f:render partial="Styles" arguments="{_all}" />
+    <f:render partial="Scripts" arguments="{_all}" />
+    <f:asset.script identifier="reactfilters" src="https://unpkg.com/@openagenda/react-filters@2.8.4/dist/main.js" />
+    <f:asset.script identifier="filters" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-filters.js" />
+    <f:asset.script identifier="pager" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-pager.js" />
+    <f:asset.script identifier="markdown" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" />
+    <f:asset.script identifier="openagendamd" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-markdown.js" />
+
+    <f:render partial="EventMap" arguments="{event:event}" />
+
+    <h1 class="title page-title">{event.title}</h1>
+
+    <article id="event-{event.uid}" class="oa-event oa-event--single">
+        <div class="oa-links clearfix">
+            <f:link.external class="oa-links__back" uri="{agendaUrl}"><f:translate key="backAgenda" extensionName="openagenda" /></f:link.external>
+            <f:if condition="{preview} != 1">
+                <div class="oa-links__nav">
+                    <f:if condition="{variables.index}">
+                        <f:if condition="{variables.total}">
+                            <f:if condition="{variables.previous_event_url}">
+                                <f:then>
+                                    <a href="{variables.previous_event_url}"><f:translate key="previous" extensionName="openagenda" /></a>
+                                </f:then>
+                                <f:else>
+                                    <span><f:translate key="previous" extensionName="openagenda" /></span>
+                                </f:else>
+                            </f:if>
+                            {variables.index}/{variables.total}
+                            <f:if condition="{variables.next_event_url}">
+                                <f:then>
+                                    <a href="{variables.next_event_url}"><f:translate key="next" extensionName="openagenda" /></a>
+                                </f:then>
+                                <f:else>
+                                    <span><f:translate key="next" extensionName="openagenda" /></span>
+                                </f:else>
+                            </f:if>
+                        </f:if>
+                    </f:if>
+                </div>
+            </f:if>
+        </div>
+        <div class="oa-event__wrapper">
+            <header class="oa-event__header">
+                <p class="oa-event-description oa-event-description--short">{event.description}</p>
+                <f:if condition="{event.image}">
+                    <figure class="oa-event-picture">
+                        <img src="{event.image.base}{event.image.filename}" alt="{event.title}" />
+                        <f:if condition="{event.imageCredits}">
+                            <figcaption>{event.imageCredits}</figcaption>
+                        </f:if>
+                        <div
+                                class="checkbox oa-event-favorite oa-event-favorite--big"
+                                data-oa-widget="favorites_{event.uid}"
+                                data-oa-widget-params="{&quot;eventUid&quot;:&quot;{event.uid}&quot;,&quot;name&quot;:&quot;favorite&quot;}">
+                            <span><f:translate key="favoritesAddRemove" extensionName="openagenda" /></span>
+                        </div>
+                    </figure>
+                </f:if>
+            </header>
+            <div class="oa-event__content">
+                <f:if condition="{event.location.city}">
+                    <f:if condition="{event.location.city} != ''">
+                        <div class="oa-event-location">
+                            <f:if condition="{event.location.address}">
+                                <f:then>
+                                    <f:if condition="{event.location.address} != ''">
+                                        <f:then>
+                                            {event.location.address}
+                                        </f:then>
+                                        <f:else>
+                                            {event.location.city}
+                                        </f:else>
+                                    </f:if>
+                                </f:then>
+                                <f:else>
+                                    {event.location.city}
+                                </f:else>
+                            </f:if>
+                        </div>
+                    </f:if>
+                </f:if>
+                <div class="oa-event-daterange">{event.dateRange}</div>
+                <p class="oa-event-description oa-event-description--long markdown"><f:format.raw>{event.longDescription}</f:format.raw></p>
+            </div>
+        </div>
+    </article>
+
+    <f:render partial="EventTimetable" arguments="{event:event}" />
+</f:section>
+</html>

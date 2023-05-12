@@ -1,0 +1,31 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+    <f:layout name="General" />
+
+    <f:section name="main">
+        <f:if condition="{total} > 0">
+            <f:then>
+                <div class="wbg exports">
+                    <a
+                            role="button"
+                            href="https://openagenda.com/agendas/{agenda.uid}/events.v2.xlsx{f:if(condition: '{search_string}', then: '?{search_string}')}">xls</a>
+                    <a
+                            role="button"
+                            href="https://openagenda.com/agendas/{agenda.uid}/events.v2.rss{f:if(condition: '{search_string}', then: '?{search_string}')}">rss</a>
+                </div>
+                <ul class="oa-list oa-list--x{columns}">
+                    <f:for each="{events}" as="event">
+                        <li class="oa-list__item">
+                            <f:render partial="Event" arguments="{event:event}" />
+                        </li>
+                    </f:for>
+                </ul>
+                <f:render partial="Pagination" arguments="{pagination: pagination.pagination, paginator: pagination.paginator, page:pagination.page, filtersUrl:filtersUrlPagination}" />
+            </f:then>
+            <f:else>
+                {noEventLabel}
+            </f:else>
+        </f:if>
+    </f:section>
+</html>

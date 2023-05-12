@@ -1,0 +1,2 @@
+# Configuration
+<INCLUDE_TYPOSCRIPT: source="DIR:EXT:openagenda/Configuration/TypoScript/Config/" extensions="ts">

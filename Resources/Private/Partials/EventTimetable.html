@@ -1,0 +1,41 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true" lang="en">
+
+    <f:asset.css identifier="eventtimetable" href="EXT:openagenda/Resources/Public/CSS/openagenda-event-timetable.css" />
+    <f:asset.script identifier="eventtimetable" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-event-timetable.js" />
+
+    <div class="timings js_timings">
+        <ul class="months">
+            <f:for each="{event.timetable}" as="month" iteration="iterator">
+                <li class="month {f:if(condition: '{iterator.isFirst}', then: 'displayed')} js_month">
+                    <div class="month-title">
+                        <f:if condition="{iterator.isFirst}">
+                            <f:else>
+                                <i class="prev fa fa-chevron-left js_prev"><f:translate key="previous" extensionName="openagenda" /></i>
+                            </f:else>
+                        </f:if>
+                        <h4><f:format.case mode="capital">{month.label}</f:format.case></h4>
+                        <f:if condition="{iterator.isLast}">
+                            <f:else>
+                                <i class="next fa fa-chevron-right js_next"><f:translate key="next" extensionName="openagenda" /></i>
+                            </f:else>
+                        </f:if>
+                    </div>
+                    <ul class="month-list">
+                        <f:for each="{month.weeks}" as="week">
+                            <f:for each="{week}" as="day">
+                                <li class="month-item">
+                                    <span class="day"><f:format.case mode="capital">{day.label}</f:format.case></span>
+                                    <f:for each="{day.timings}" as="timing">
+                                        <span class="hour">{timing.begin}-{timing.end}</span>
+                                    </f:for>
+                                </li>
+                            </f:for>
+                            <li class="week-separator"></li>
+                        </f:for>
+                    </ul>
+                </li>
+            </f:for>
+        </ul>
+    </div>
+</html>

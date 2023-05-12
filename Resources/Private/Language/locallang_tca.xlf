@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="openagenda">
+		<header />
+		<body>
+			<trans-unit id="tt_content.list_type.openagenda_agenda">
+				<source>Show OpenAgenda</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_preview">
+				<source>Show OpenAgenda Preview</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_active_filter">
+				<source>Show OpenAgenda Active Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_additional_filter">
+				<source>Show OpenAgenda Additional Field Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_cities_filter">
+				<source>Show OpenAgenda Cities Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_daterange_filter">
+				<source>Show OpenAgenda Date Range Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_favorites_filter">
+				<source>Show OpenAgenda Favorites Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_keywords_filter">
+				<source>Show OpenAgenda Keywords Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_map_filter">
+				<source>Show OpenAgenda Map Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_relative_filter">
+				<source>Show OpenAgenda Relative Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_search_filter">
+				<source>Show OpenAgenda Search Filter</source>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type.openagenda_total_filter">
+				<source>Show OpenAgenda Total Filter</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

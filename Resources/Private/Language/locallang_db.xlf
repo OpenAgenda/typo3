@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="messages" product-name="openagenda">
+		<header />
+		<body>
+			<trans-unit id="sheetGeneral">
+				<source>General</source>
+			</trans-unit>
+			<trans-unit id="sheetFilters">
+				<source>Filters</source>
+			</trans-unit>
+			<trans-unit id="agenda.calendarUid">
+				<source>Openagenda Calendar Uid</source>
+			</trans-unit>
+			<trans-unit id="agenda.eventsPerPage">
+				<source>Number of events to show per agenda page</source>
+			</trans-unit>
+			<trans-unit id="agenda.language">
+				<source>Default language</source>
+			</trans-unit>
+			<trans-unit id="agenda.columns">
+				<source>Events per column</source>
+			</trans-unit>
+			<trans-unit id="agenda.mapFilterTilesUri">
+				<source>Default map tiles URL</source>
+			</trans-unit>
+			<trans-unit id="agenda.mapFilterTilesAttribution">
+				<source>Default map tiles attribution</source>
+			</trans-unit>
+			<trans-unit id="agenda.preFilter">
+				<source>Prefilter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayMapFilter">
+				<source>Display Map Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayTotalFilter">
+				<source>Display Total Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayActiveFilter">
+				<source>Display Active Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayFavoritesFilter">
+				<source>Display Favorites Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displaySearchFilter">
+				<source>Display Search Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayCitiesFilter">
+				<source>Display Cities Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayDateRangeFilter">
+				<source>Display Date Range Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayKeywordsFilter">
+				<source>Display Keywords Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayAdditionnalFieldFilter">
+				<source>Display Additional Field Filter</source>
+			</trans-unit>
+			<trans-unit id="agenda.additionnalFieldFilter">
+				<source>Additionals Fields Filter names (semicolon separated values)</source>
+			</trans-unit>
+			<trans-unit id="agenda.displayRelativeFilter">
+				<source>Display Relative Filter</source>
+			</trans-unit>
+			<trans-unit id="preview.eventsInPreview">
+				<source>Number of events in Preview</source>
+			</trans-unit>
+			<trans-unit id="preview.language">
+				<source>Default language</source>
+			</trans-unit>
+			<trans-unit id="preview.columns">
+				<source>Events per column</source>
+			</trans-unit>
+			<trans-unit id="preview.agendaPage">
+				<source>OpenAgenda Page</source>
+			</trans-unit>
+			<trans-unit id="preview.displayAgendaLink">
+				<target>Display Agenda page link</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -1,0 +1,56 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true" lang="en">
+
+<nav class="pager layout--content-medium" role="navigation">
+    <h4 class="visually-hidden">Pagination</h4>
+    <ul class="pager__items js-pager__items">
+        <f:if condition="{pagination.previousPageNumber} && {pagination.previousPageNumber} >= {pagination.firstPageNumber}">
+            <f:then>
+                <li class="pager__item pager__item--control pager__item--first">
+                    <a href="tx_openagenda_agenda[page]=0&{filtersUrl}" class="pager__link" title="{f:translate(key:'pagination.first', extensionName: 'openagenda')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="16px" viewBox="0 0 15 16"><path d="M5.1,7.2l8.3-6C14.1,0.7,15,1.1,15,2V14c0,0.8-0.9,1.3-1.6,0.8l-8.3-6C4.6,8.4,4.6,7.6,5.1,7.2z M0,0h2v16H0V0z"></path></svg>
+                    </a>
+                </li>
+                <li class="pager__item pager__item--control pager__item--previous">
+                    <a href="tx_openagenda_agenda[page]={pagination.previousPageNumber}&{filtersUrl}" class="pager__link" title="{f:translate(key:'pagination.previous', extensionName: 'openagenda')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="16" viewBox="0 0 11 16"><path d="M1.11201 7.19126L9.41183 1.15503C10.0728 0.674329 11 1.14648 11 1.96377V14.0362C11 14.8535 10.0728 15.3257 9.41183 14.845L1.11201 8.80874C0.562908 8.40939 0.562907 7.59061 1.11201 7.19126Z"></path></svg>
+                    </a>
+                </li>
+            </f:then>
+        </f:if>
+        <f:if condition="{pagination.hasLessPages}">
+            <li class="pager__item pager__item--ellipsis" role="presentation">…</li>
+        </f:if>
+        <f:for each="{pagination.allPageNumbers}" as="page">
+            <f:if condition="{page} == {paginator.currentPageNumber}">
+                <f:then>
+                    <li class="pager__item pager__item--active pager__item--number">
+                        {page}
+                    </li>
+                </f:then>
+                <f:else>
+                    <li class="pager__item pager__item--number">
+                        <a href="tx_openagenda_agenda[page]={page}&{filtersUrl}" class="pager__link">{page}</a>
+                    </li>
+                </f:else>
+            </f:if>
+        </f:for>
+        <f:if condition="{pagination.hasMorePages}">
+            <li class="pager__item pager__item--ellipsis" role="presentation">…</li>
+        </f:if>
+        <f:if condition="{pagination.nextPageNumber} && {pagination.nextPageNumber} <= {pagination.lastPageNumber}">
+            <f:then>
+                <li class="pager__item pager__item--control pager__item--next">
+                    <a href="tx_openagenda_agenda[page]={pagination.nextPageNumber}&{filtersUrl}" class="pager__link" title="{f:translate(key:'pagination.next', extensionName: 'openagenda')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="16" viewBox="0 0 11 16"><path d="M1.11201 7.19126L9.41183 1.15503C10.0728 0.674329 11 1.14648 11 1.96377V14.0362C11 14.8535 10.0728 15.3257 9.41183 14.845L1.11201 8.80874C0.562908 8.40939 0.562907 7.59061 1.11201 7.19126Z"></path></svg>
+                    </a>
+                </li>
+                <li class="pager__item pager__item--control pager__item--last">
+                    <a href="tx_openagenda_agenda[page]={pagination.lastPageNumber}&{filtersUrl}" class="pager__link" title="{f:translate(key:'pagination.last', extensionName: 'openagenda')}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="16px" viewBox="0 0 15 16"><path d="M5.1,7.2l8.3-6C14.1,0.7,15,1.1,15,2V14c0,0.8-0.9,1.3-1.6,0.8l-8.3-6C4.6,8.4,4.6,7.6,5.1,7.2z M0,0h2v16H0V0z"></path></svg>
+                    </a>
+                </li>
+            </f:then>
+        </f:if>
+    </ul>
+</nav>

@@ -1,0 +1,10 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true" lang="en">
+
+    <f:asset.css identifier="leaflet" href="EXT:openagenda/Resources/Public/CSS/openagenda-leaflet.css" />
+    <f:asset.script identifier="leaflet" src="EXT:openagenda/Resources/Public/JavaScript/leaflet.js" />
+
+    <div class="oa-map-filter map-container oa-filter"
+         data-oa-filter="map"
+         data-oa-filter-params="{&quot;tileUrl&quot;:&quot;{settings.mapFilterTilesUri}&quot;,&quot;tileAttribution&quot;:&quot;{settings.mapFilterTilesAttribution}&quot;,&quot;searchWithMap&quot;:{f:if(condition: '{auto_search}', then: 'true', else: 'false')},&quot;searchMessage&quot;:&quot;{f:translate(key: 'searchWithMap', extensionName: 'openagenda')}&quot;,&quot;type&quot;:&quot;map&quot;,&quot;name&quot;:&quot;geo&quot;}"></div>
+</html>
