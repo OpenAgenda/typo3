@@ -54,9 +54,6 @@
 			<trans-unit id="agenda.displayKeywordsFilter">
 				<source>Display Keywords Filter</source>
 			</trans-unit>
-			<trans-unit id="agenda.displayAdditionnalFieldFilter">
-				<source>Display Additional Field Filter</source>
-			</trans-unit>
 			<trans-unit id="agenda.additionnalFieldFilter">
 				<source>Additionals Fields Filter names (semicolon separated values)</source>
 			</trans-unit>

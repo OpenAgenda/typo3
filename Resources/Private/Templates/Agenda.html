@@ -7,14 +7,20 @@
         <f:asset.script identifier="jquery" src="https://code.jquery.com/jquery-3.6.4.min.js" />
         <f:render partial="Styles" arguments="{_all}" />
         <f:render partial="Scripts" arguments="{_all}" />
-        <f:asset.script identifier="reactfilters" src="https://unpkg.com/@openagenda/react-filters@2.8.4/dist/main.js" />
         <f:asset.script identifier="filters" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-filters.js" />
+        <f:asset.script identifier="reactfilters" src="https://unpkg.com/@openagenda/react-filters@2.8.4/dist/main.js" />
         <f:asset.script identifier="pager" src="EXT:openagenda/Resources/Public/JavaScript/openagenda-pager.js" />
-
         <div class="row">
             <f:if condition="{erreur}">
                 <f:then>
-                    <f:translate key="error" extensionName="openagenda" />
+                    <f:if condition="{erreur} == 1">
+                        <f:then>
+                            <f:translate key="error" extensionName="openagenda" />
+                        </f:then>
+                        <f:else>
+                            {erreur}
+                        </f:else>
+                    </f:if>
                 </f:then>
                 <f:else>
                     <div class="col-sm-9">
@@ -71,11 +77,9 @@
                         <f:if condition="{settings.displayKeywordsFilter}">
                             <f:render partial="KeywordsFilter" />
                         </f:if>
-                        <f:if condition="{settings.displayAdditionnalFieldFilter}">
-                            <f:for each="{additionalFields}" as="additionalField">
-                                <f:render partial="AdditionalFieldFilter" arguments="{additionalField: additionalField}" />
-                            </f:for>
-                        </f:if>
+                        <f:for each="{additionalFields}" as="additionalField">
+                            <f:render partial="AdditionalFieldFilter" arguments="{additionalField: additionalField}" />
+                        </f:for>
                         <f:if condition="{settings.displayRelativeFilter}">
                             <f:render partial="RelativeFilter" />
                         </f:if>
@@ -84,10 +88,8 @@
             </f:if>
         </div>
         <div class="overlay" id="loading" >
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border text-primary" role="status" >
-                    <span class="sr-only"></span>
-                </div>
+            <div class="spinner-border text-primary" role="status" >
+                <span class="sr-only"></span>
             </div>
         </div>
     </f:section>

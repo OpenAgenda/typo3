@@ -54,9 +54,6 @@
 			<trans-unit id="agenda.displayKeywordsFilter">
 				<target>Afficher le filtre "Mots-clés"</target>
 			</trans-unit>
-			<trans-unit id="agenda.displayAdditionnalFieldFilter">
-				<target>Afficher le filtre "Champ additionnel"</target>
-			</trans-unit>
 			<trans-unit id="agenda.additionnalFieldFilter">
 				<target>Noms des "Champs additionnels" (séparés par un point virgule)</target>
 			</trans-unit>

@@ -9,6 +9,9 @@
             <trans-unit id="error">
                 <source>An error has occured.</source>
             </trans-unit>
+            <trans-unit id="errorEvent">
+                <source>An error has occured. This event cannot be retrieved because the calendar ID is different between "Preview" mode and "List" mode</source>
+            </trans-unit>
             <trans-unit id="placeholder">
                 <source>Search</source>
             </trans-unit>

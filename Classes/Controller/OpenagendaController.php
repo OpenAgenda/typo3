@@ -9,7 +9,6 @@ use Openagenda\Openagenda\Utility\OpenagendaEventProcessorUtility;
 use Openagenda\Openagenda\Utility\OpenagendaHelperUtility;
 use Openagenda\Openagenda\Utility\OpenagendaConnectorUtility;
 use Openagenda\Openagenda\Utility\OpenagendaPaginationUtility;
-use OpenAgendaSdk\Endpoints;
 use OpenAgendaSdk\OpenAgendaSdk;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\Exception\AspectNotFoundException;
 use TYPO3\CMS\Core\Pagination\ArrayPaginator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -190,10 +188,9 @@ class OpenagendaController extends ActionController
 
         // AdditionalFields
         $additionalFields = array();
-        $agendaCustomFields = $this->sdk->getAgendaAdditionalFields($this->settings['calendarUid']);
-        foreach ($agendaCustomFields as $agendaCustomField) {
-            if (in_array($agendaCustomField, explode(';', $this->settings['additionnalFieldFilter']))) {
-                $additionalFields[] = $agendaCustomField;
+        foreach ($variables['entity']->schema->fields as $agendaCustomField) {
+            if (in_array($agendaCustomField->field, explode(';', $this->settings['additionnalFieldFilter']))) {
+                $additionalFields[] = $agendaCustomField->field;
             }
         }
 
@@ -270,7 +267,7 @@ class OpenagendaController extends ActionController
                 $event['relative_timing'] = $this->openagendaHelper->processRelativeTimingToEvent($event, $this->settings['language']);
 
                 // Set event local link.
-                $event['local_url'] = $this->openagendaHelper->createEventUrl($event['uid'], $event['slug'], $serialized_context, $this->settings['agendaPage'], $this->settings['language'], true);
+                $event['local_url'] = $this->openagendaHelper->createEventUrl($event['uid'], $event['slug'], $serialized_context, $this->settings['agendaPage'], $this->openagendaHelper->getLanguageId(), true);
             }
         } else {
             $erreur = true;
@@ -301,10 +298,12 @@ class OpenagendaController extends ActionController
     public function eventAction(): ResponseInterface
     {
         $arguments = $this->request->getArguments();
+        $entities = ['event' => null, 'agenda' => null];
+        $erreur = null;
         $this->settings['language'] = $this->openagendaHelper->getLanguage($this->settings['language']);
         $agenda = json_decode($this->sdk->getAgenda($this->settings['calendarUid']));
         $event = json_decode($this->sdk->getEvent($this->settings['calendarUid'], $arguments['uid']), true);
-        $event = $event['event'];
+
         $variables = array();
         $agendaUrl = null;
 
@@ -326,34 +325,40 @@ class OpenagendaController extends ActionController
             $variables['total'] = $context['total'];
         }
 
-        $event = $this->openagendaEventProcessor->convert($this->settings['calendarUid'], $event['slug'], $oac, $this->settings['language']);
-        $entities = $this->openagendaEventProcessor->buildRenderArray($event, $agenda, $context, $this->settings['language']);
-        $entities['event']['timetable'] = $this->openagendaEventProcessor->processEventTimetable($event, $this->settings['language']);
+        if(!is_null($event) && count($event) > 0) {
+            $event = $event['event'];
+            $event = $this->openagendaEventProcessor->convert($this->settings['calendarUid'], $event['slug'], $oac, $this->settings['language']);
+            $entities = $this->openagendaEventProcessor->buildRenderArray($event, $agenda, $context, $this->settings['language']);
+            $entities['event']['timetable'] = $this->openagendaEventProcessor->processEventTimetable($event, $this->settings['language']);
 
-        // Make sure we have a parent OpenAgenda node.
-        if (is_object($agenda)) {
-            // Add a link if we found a previous event with those search parameters.
-            if (!empty($entities['event']['previousEventSlug'])) {
-                $previous_event_context = $this->openagendaHelper->encodeContext($context['index'] - 1, $context['total'], $filters);
-                $previousEvent = $this->openagendaConnector->getEventBySlug($this->settings['calendarUid'], $entities['event']['previousEventSlug'], $this->config['includeEmbedded']);
-                $variables['previous_event_url'] = $this->openagendaHelper
-                    ->createEventUrl($previousEvent['uid'], $entities['event']['previousEventSlug'], $previous_event_context);
-            }
+            // Make sure we have a parent OpenAgenda node.
+            if (is_object($agenda)) {
+                // Add a link if we found a previous event with those search parameters.
+                if (!empty($entities['event']['previousEventSlug'])) {
+                    $previous_event_context = $this->openagendaHelper->encodeContext($context['index'] - 1, $context['total'], $filters);
+                    $previousEvent = $this->openagendaConnector->getEventBySlug($this->settings['calendarUid'], $entities['event']['previousEventSlug'], $this->config['includeEmbedded']);
+                    $variables['previous_event_url'] = $this->openagendaHelper
+                        ->createEventUrl($previousEvent['uid'], $entities['event']['previousEventSlug'], $previous_event_context);
+                }
 
-            // Add a link if we found a next event with those search parameters.
-            if (!empty($entities['event']['nextEventSlug'])) {
-                $next_event_context = $this->openagendaHelper->encodeContext($context['index'] + 1, $context['total'], $filters);
-                $nextEvent = $this->openagendaConnector->getEventBySlug($this->settings['calendarUid'], $entities['event']['nextEventSlug'], $this->config['includeEmbedded']);
-                $variables['next_event_url'] = $this->openagendaHelper
-                    ->createEventUrl($nextEvent['uid'], $entities['event']['nextEventSlug'], $next_event_context);
+                // Add a link if we found a next event with those search parameters.
+                if (!empty($entities['event']['nextEventSlug'])) {
+                    $next_event_context = $this->openagendaHelper->encodeContext($context['index'] + 1, $context['total'], $filters);
+                    $nextEvent = $this->openagendaConnector->getEventBySlug($this->settings['calendarUid'], $entities['event']['nextEventSlug'], $this->config['includeEmbedded']);
+                    $variables['next_event_url'] = $this->openagendaHelper
+                        ->createEventUrl($nextEvent['uid'], $entities['event']['nextEventSlug'], $next_event_context);
+                }
             }
+        } else {
+            $erreur = LocalizationUtility::translate('errorEvent', 'openagenda');
         }
 
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);
+        $this->view->assign('erreur', $erreur);
+        $this->view->assign('config', $this->config);
         $this->view->assign('event', $entities['event']);
         $this->view->assign('agenda', $entities['agenda']);
-        $this->view->assign('config', $this->config);
         $this->view->assign('variables', $variables);
         $this->view->assign('currentPage', $GLOBALS['TSFE']->id);
         $this->view->assign('language', $this->settings['language']);

@@ -9,6 +9,9 @@
             <trans-unit id="error">
                 <target>Une erreur est survenue.</target>
             </trans-unit>
+            <trans-unit id="errorEvent">
+                <target>Une erreur est survenue. Cet événement ne peut pas être récupéré car l'identifiant du calendrier est différent entre le mode "Preview" et le mode "Liste".</target>
+            </trans-unit>
             <trans-unit id="placeholder">
                 <target>Chercher dans l'agenda</target>
             </trans-unit>

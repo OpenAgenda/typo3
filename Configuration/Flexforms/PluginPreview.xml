@@ -16,6 +16,7 @@
                         </label>
                         <config>
                             <type>input</type>
+                            <eval>required</eval>
                         </config>
                     </settings.calendarUid>
                     <settings.eventsInPreview>
@@ -25,6 +26,7 @@
                         <config>
                             <type>input</type>
                             <default>20</default>
+                            <eval>required</eval>
                         </config>
                     </settings.eventsInPreview>
                     <settings.language>
