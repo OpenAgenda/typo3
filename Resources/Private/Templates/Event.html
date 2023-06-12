@@ -27,7 +27,7 @@
         <f:else>
             <article id="event-{event.uid}" class="oa-event oa-event--single">
                 <div class="oa-links clearfix">
-                    <f:link.external class="oa-links__back" uri="{agendaUrl}"><f:translate key="backAgenda" extensionName="openagenda" /></f:link.external>
+                    <a href="{agendaUrl}" class="oa-links__back"><f:translate key="backAgenda" extensionName="openagenda" /></a>
                     <f:if condition="{preview} != 1">
                         <div class="oa-links__nav">
                             <f:if condition="{variables.index}">
