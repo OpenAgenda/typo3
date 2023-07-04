@@ -194,8 +194,15 @@ class OpenagendaController extends ActionController
             }
         }
 
+        // Tracking
+        $paramsTracking = '';
+        if($this->settings['suivi']) {
+            $paramsTracking = '&cms=typo3&host=' . $_SERVER['SERVER_NAME'];
+        }
+
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);
+        $this->view->assign('paramsTracking', $paramsTracking);
         $this->view->assign('erreur', $erreur);
         $this->view->assign('config', $this->config);
         $this->view->assign('placeholder', LocalizationUtility::translate('placeholder', 'openagenda'));
@@ -278,8 +285,15 @@ class OpenagendaController extends ActionController
             ->buildFrontendUri();
         $agendaUrl = $agendaUrlBase . '?' . http_build_query($filters);
 
+        // Tracking
+        $paramsTracking = '';
+        if($this->settings['suivi']) {
+            $paramsTracking = '&cms=typo3&host=' . $_SERVER['SERVER_NAME'];
+        }
+
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);
+        $this->view->assign('paramsTracking', $paramsTracking);
         $this->view->assign('erreur', $erreur);
         $this->view->assign('config', $this->config);
         $this->view->assign('agenda', $variables['entity']);
@@ -353,8 +367,19 @@ class OpenagendaController extends ActionController
             $erreur = LocalizationUtility::translate('errorEvent', 'openagenda');
         }
 
+        // Tracking
+        $paramsTracking = '';
+        if($this->settings['suivi']) {
+            $paramsTracking = '&cms=typo3&host=' . $_SERVER['SERVER_NAME'];
+        }
+
+        // Rich Snippet
+        $richSnippet = json_encode($this->sdk->getEventRichSnippet($entities['event'], 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REDIRECT_URL'], $this->settings['language']),JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);
+        $this->view->assign('paramsTracking', $paramsTracking);
+        $this->view->assign('richSnippet', $richSnippet);
         $this->view->assign('erreur', $erreur);
         $this->view->assign('config', $this->config);
         $this->view->assign('event', $entities['event']);

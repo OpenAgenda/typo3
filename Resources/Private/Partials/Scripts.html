@@ -21,11 +21,17 @@
         const settingsOpenagendaPreFilter = '{settings.preFilter}';
         const settingsOpenagendamarkerUrl = '<f:uri.image src="EXT:openagenda/Resources/Public/Images/marker-icon.svg" />';
         const settingsOpenagendaAjaxUrl = '{agendaUrlBase}?type=46304&settingsOpenagendaCalendarUid={settings.calendarUid}';
-        const settingsOpenagendaFiltersUrl = '{agendaUrlBase}?type=46305&settingsOpenagendaCalendarUid={settings.calendarUid}';
+        const settingsOpenagendaFiltersUrl = '{agendaUrlBase}?type=46305{paramsTracking->f:format.raw()}&settingsOpenagendaCalendarUid={settings.calendarUid}';
         const settingsOpenagendaPage = {currentPage};
         const settingsOpenagendaLanguageId = {languageId};
         const settingsOpenagendaLanguage = '{language}';
         const settingsOpenagendaColumns = {settings.columns};
         const settingsOpenagendaEventsPerPage = '{settings.eventsPerPage}';
     </script>
+
+    <f:if condition="{richSnippet}">
+        <script type="application/ld+json">
+            {richSnippet->f:format.raw()}
+        </script>
+    </f:if>
 </html>

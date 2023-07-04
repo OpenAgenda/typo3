@@ -60,6 +60,9 @@
 			<trans-unit id="agenda.displayRelativeFilter">
 				<source>Display Relative Filter</source>
 			</trans-unit>
+			<trans-unit id="agenda.suivi">
+				<source>I allow OpenAgenda to collect information on the website name and the extension used for statistical purposes only through queries made to its API</source>
+			</trans-unit>
 			<trans-unit id="preview.eventsInPreview">
 				<source>Number of events in Preview</source>
 			</trans-unit>

@@ -163,6 +163,15 @@
                             <type>check</type>
                         </config>
                     </settings.displayRelativeFilter>
+                    <settings.suivi>
+                        <label>
+                            LLL:EXT:openagenda/Resources/Private/Language/locallang_db.xlf:agenda.suivi
+                        </label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
+                    </settings.suivi>
                 </el>
             </ROOT>
         </vDEF>
