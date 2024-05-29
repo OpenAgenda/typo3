@@ -516,25 +516,22 @@ class OpenagendaController extends ActionController
             }
 
             $noEventLabel = LocalizationUtility::translate('noEvent', 'openagenda', array(), $queryInfo['settingsOpenagendaLanguage']);
-            $view = GeneralUtility::makeInstance(StandaloneView::class);
-            $view->setLayoutRootPaths(array('EXT:openagenda/Resources/Private/Layouts'));
-            $view->setTemplateRootPaths(array('EXT:openagenda/Resources/Private/Templates'));
-            $view->setPartialRootPaths(array('EXT:openagenda/Resources/Private/Partials'));
 
-            $view->assign('noEventLabel', $noEventLabel);
-            $view->assign('events', $events);
-            $view->assign('total', $entities['total']);
-            $view->assign('columns', $queryInfo['settingsOpenagendaColumns']);
-            $view->assign('filtersUrl', $filtersUrl);
-            $view->assign('filtersUrlPagination', $filtersUrlPagination);
-            $view->assign('pagination', [
+            $this->view->assign('noEventLabel', $noEventLabel);
+            $this->view->assign('events', $events);
+            $this->view->assign('total', $entities['total']);
+            $this->view->assign('columns', $queryInfo['settingsOpenagendaColumns']);
+            $this->view->assign('filtersUrl', $filtersUrl);
+            $this->view->assign('filtersUrlPagination', $filtersUrlPagination);
+            $this->view->assign('pagination', [
                 'paginator' => $paginator,
                 'pagination' => $pagination,
                 'page' => $currentPage,
             ]);
+            // dd($this->view);
 
-            $content = array('content' => $view->render('AgendaAjax'));
-
+            $content = array('content' => $this->view->render('AgendaAjax'));
+            // dd($content);
             $response->getBody()->write(json_encode($content));
         }
 
