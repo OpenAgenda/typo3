@@ -528,10 +528,9 @@ class OpenagendaController extends ActionController
                 'pagination' => $pagination,
                 'page' => $currentPage,
             ]);
-            // dd($this->view);
 
             $content = array('content' => $this->view->render('AgendaAjax'));
-            // dd($content);
+            
             $response->getBody()->write(json_encode($content));
         }
 
