@@ -1,10 +1,10 @@
 plugin.tx_openagenda {
     view {
-        # cat=plugin.tx_openagenda/file; type=string; label=Path to template root (FE)
+        # cat=plugin.tx_openagenda/file; type=string; label=Path to template root
         templateRootPath = EXT:openagenda/Resources/Private/Templates/
-        # cat=plugin.tx_openagenda/file; type=string; label=Path to template partials (FE)
+        # cat=plugin.tx_openagenda/file; type=string; label=Path to template partials
         partialRootPath = EXT:openagenda/Resources/Private/Partials/
-        # cat=plugin.tx_openagenda/file; type=string; label=Path to template layouts (FE)
+        # cat=plugin.tx_openagenda/file; type=string; label=Path to template layouts
         layoutRootPath = EXT:openagenda/Resources/Private/Layouts/
     }
 }
