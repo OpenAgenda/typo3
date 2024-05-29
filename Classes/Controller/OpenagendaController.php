@@ -449,7 +449,7 @@ class OpenagendaController extends ActionController
     public function ajaxCallbackAction(): ResponseInterface
     {
         // Get request filters.
-        $preFilters = null;
+        $preFilters = [];
         $request = $GLOBALS['TYPO3_REQUEST'];
         $normalizedParams = $request->getAttribute('normalizedParams');
         parse_str($normalizedParams->getQueryString(), $queryInfo);
