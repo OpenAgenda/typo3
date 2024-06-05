@@ -73,15 +73,18 @@ class OpenagendaHelperUtility implements OpenagendaHelperUtilityInterface
      *   Total number of events returned by current search.
      * @param array $filters
      *   Array of search parameters.
+     * @param int $calendarUid
+     *   calendar uid from pi settinds.
      *
      * @return string
      *   Encoded context.
      */
-    public function encodeContext(int $index, int $total, array $filters): string
+    public function encodeContext(int $index, int $total, array $filters, int $calendarUid): string
     {
         $context = [
             'index' => $index,
             'total' => $total,
+            'calendarUid' => $calendarUid
         ];
 
         if (!empty($filters)) {

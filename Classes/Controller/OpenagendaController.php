@@ -152,7 +152,7 @@ class OpenagendaController extends ActionController
             $events = $variables['events']['events'];
             foreach ($events as $key => &$event) {
                 // We use the event's key in the array as index.
-                $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $variables['events']['total'], $filters);
+                $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $variables['events']['total'], $filters,$this->settings['calendarUid']);
 
                 // Localize event according to the language set in the node.
                 $this->openagendaHelper->localizeEvent($event, $this->settings['language']);
@@ -265,7 +265,7 @@ class OpenagendaController extends ActionController
             $events = $variables['events']['events'];
             foreach ($events as $key => &$event) {
                 // We use the event's key in the array as index.
-                $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $variables['events']['total'], $filters);
+                $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $variables['events']['total'], $filters, $this->settings['calendarUid']);
 
                 // Localize event according to the language set in the node.
                 $this->openagendaHelper->localizeEvent($event, $this->settings['language']);
@@ -349,7 +349,7 @@ class OpenagendaController extends ActionController
             if (is_object($agenda)) {
                 // Add a link if we found a previous event with those search parameters.
                 if (!empty($entities['event']['previousEventSlug'])) {
-                    $previous_event_context = $this->openagendaHelper->encodeContext($context['index'] - 1, $context['total'], $filters);
+                    $previous_event_context = $this->openagendaHelper->encodeContext($context['index'] - 1, $context['total'], $filters, $this->settings['calendarUid']);
                     $previousEvent = $this->openagendaConnector->getEventBySlug($this->settings['calendarUid'], $entities['event']['previousEventSlug'], $this->config['includeEmbedded']);
                     $variables['previous_event_url'] = $this->openagendaHelper
                         ->createEventUrl($previousEvent['uid'], $entities['event']['previousEventSlug'], $previous_event_context);
@@ -357,7 +357,7 @@ class OpenagendaController extends ActionController
 
                 // Add a link if we found a next event with those search parameters.
                 if (!empty($entities['event']['nextEventSlug'])) {
-                    $next_event_context = $this->openagendaHelper->encodeContext($context['index'] + 1, $context['total'], $filters);
+                    $next_event_context = $this->openagendaHelper->encodeContext($context['index'] + 1, $context['total'], $filters, $this->settings['calendarUid']);
                     $nextEvent = $this->openagendaConnector->getEventBySlug($this->settings['calendarUid'], $entities['event']['nextEventSlug'], $this->config['includeEmbedded']);
                     $variables['next_event_url'] = $this->openagendaHelper
                         ->createEventUrl($nextEvent['uid'], $entities['event']['nextEventSlug'], $next_event_context);
@@ -495,7 +495,7 @@ class OpenagendaController extends ActionController
                 $events = $entities['events'];
                 foreach ($events as $key => &$event) {
                     // We use the event's key in the array as index.
-                    $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $entities['total'], $filters);
+                    $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $entities['total'], $filters, $queryInfo['settingsOpenagendaCalendarUid']);
 
                     // Set Relative timing
                     $event['relative_timing'] = $this->openagendaHelper->processRelativeTimingToEvent($event, $queryInfo['settingsOpenagendaLanguage']);
