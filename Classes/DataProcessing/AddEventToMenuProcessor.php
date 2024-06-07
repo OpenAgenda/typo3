@@ -20,6 +20,11 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class AddEventToMenuProcessor implements DataProcessorInterface
 {
     /**
+     * The content object renderer
+     */
+    protected ?ContentObjectRenderer $cObj = null;
+
+    /**
      * @param ContentObjectRenderer $cObj
      * @param array $contentObjectConfiguration
      * @param array $processorConfiguration
@@ -28,6 +33,8 @@ class AddEventToMenuProcessor implements DataProcessorInterface
      */
     public function process(ContentObjectRenderer $cObj, array $contentObjectConfiguration, array $processorConfiguration, array $processedData): array
     {
+        $this->cObj = $cObj;
+
         if (isset($processorConfiguration['if.']) && !$cObj->checkIf($processorConfiguration['if.'])) {
             return $processedData;
         }
@@ -60,8 +67,7 @@ class AddEventToMenuProcessor implements DataProcessorInterface
         }
 
         // Language ISO
-        $language = $this->getTsfe()->getLanguage()->getTwoLetterIsoCode();
-
+        $language = $this->cObj->getRequest()->getAttribute('language')->getTwoLetterIsoCode();
         $menu[] = [
             'data' => $event,
             'title' => $event['title'][$language],
@@ -80,16 +86,16 @@ class AddEventToMenuProcessor implements DataProcessorInterface
     protected function getEvent(): array
     {
         $eventUid = 0;
-        $vars = GeneralUtility::_GET('tx_openagenda_agenda');
-        if (isset($vars['uid'])) {
-            $eventUid = (int)$vars['uid'];
+        $vars = $this->cObj->getRequest()->getQueryParams();
+        if (isset($vars['tx_openagenda_agenda']['uid'])) {
+            $eventUid = (int)$vars['tx_openagenda_agenda']['uid'];
         }
 
         if ($eventUid) {
             $backendConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
                 ->get('openagenda');
             $sdk = new OpenAgendaSdk($backendConfiguration['public_key']);
-            $context = json_decode(base64_decode($vars['oac']), true);
+            $context = json_decode(base64_decode($vars['tx_openagenda_agenda']['oac']), true);
             $event = json_decode($sdk->getEvent($context['calendarUid'], $eventUid), true);
 
             if ($event['success']) {
@@ -97,13 +103,5 @@ class AddEventToMenuProcessor implements DataProcessorInterface
             }
         }
         return [];
-    }
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    protected function getTsfe(): TypoScriptFrontendController
-    {
-        return $GLOBALS['TSFE'];
     }
 }
