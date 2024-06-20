@@ -20,7 +20,7 @@ interface OpenagendaHelperUtilityInterface
      * @return string
      *   Encoded context.
      */
-    public function encodeContext(int $index, int $total, array $search): string;
+    public function encodeContext(int $index, int $total, array $search, int $calendarUid): string;
 
     /**
      * Decode the context request parameter.
