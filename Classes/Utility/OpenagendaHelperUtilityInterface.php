@@ -16,6 +16,8 @@ interface OpenagendaHelperUtilityInterface
      *   Total number of events returned by current search.
      * @param array $search
      *   Array of search parameters.
+	 * @param int $calendarUid
+	 *   calendar uid from pi settings.
      *
      * @return string
      *   Encoded context.

@@ -74,7 +74,7 @@ class OpenagendaHelperUtility implements OpenagendaHelperUtilityInterface
      * @param array $filters
      *   Array of search parameters.
      * @param int $calendarUid
-     *   calendar uid from pi settinds.
+     *   calendar uid from pi settings.
      *
      * @return string
      *   Encoded context.

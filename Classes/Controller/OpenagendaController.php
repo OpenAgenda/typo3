@@ -9,6 +9,7 @@ use Openagenda\Openagenda\Utility\OpenagendaEventProcessorUtility;
 use Openagenda\Openagenda\Utility\OpenagendaHelperUtility;
 use Openagenda\Openagenda\Utility\OpenagendaConnectorUtility;
 use Openagenda\Openagenda\Utility\OpenagendaPaginationUtility;
+use Openagenda\Openagenda\Service\OpenagendaService;
 use OpenAgendaSdk\OpenAgendaSdk;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -22,7 +23,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class OpenagendaController extends ActionController
 {
@@ -68,6 +68,13 @@ class OpenagendaController extends ActionController
      */
     protected OpenagendaEventProcessorUtility $openagendaEventProcessor;
 
+	/**
+	 * OpenagendaService.
+	 *
+	 * @var OpenagendaService
+	 */
+	protected OpenagendaService $openagendaService;
+
     /**
      * OpenAgenda Config Array.
      *
@@ -82,11 +89,13 @@ class OpenagendaController extends ActionController
      */
     private LoggerInterface $logger;
 
-    /**
-     * @throws ExtensionConfigurationPathDoesNotExistException
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     */
-    public function __construct(LoggerInterface $logger, ResponseFactoryInterface $responseFactory)
+	/**
+	 * @param LoggerInterface $logger
+	 * @param ResponseFactoryInterface $responseFactory
+	 * @throws ExtensionConfigurationExtensionNotConfiguredException
+	 * @throws ExtensionConfigurationPathDoesNotExistException
+	 */
+	public function __construct(LoggerInterface $logger, ResponseFactoryInterface $responseFactory)
     {
         $this->logger = $logger;
         $backendConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)
@@ -101,40 +110,21 @@ class OpenagendaController extends ActionController
         $this->openagendaConnector = new OpenagendaConnectorUtility($this->logger);
         $this->openagendaEventProcessor = new OpenagendaEventProcessorUtility($this->logger);
         $this->openagendaAgendaProcessor = new OpenagendaAgendaProcessorUtility($this->logger);
+		$this->openagendaService = new OpenagendaService($this->logger, $this->config['publicKey']);
         $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @throws AspectNotFoundException
-     */
-    public function agendaAction(): ResponseInterface
+	/**
+	 * @return ResponseInterface
+	 * @throws AspectNotFoundException
+	 */
+	public function agendaAction(): ResponseInterface
     {
         $arguments = $this->request->getArguments();
         $this->settings['language'] = $this->openagendaHelper->getLanguage($this->settings['language']);
 
-        // Get request filters.
-        $request = $GLOBALS['TYPO3_REQUEST'];
-        $normalizedParams = $request->getAttribute('normalizedParams');
-        parse_str($normalizedParams->getQueryString(), $queryInfo);
-
-        $filters = $queryInfo;
-        $filters += ['detailed' => 1];
-
-        // Remove pager params.
-        unset($filters['type']);
-
-        // Get pre-filters and add them to filters if defined.
-        $preFilters = $this->openagendaHelper->getPreFilters($this->settings['preFilter']);
-
-        // Current & upcoming events only.
-        $currentValue = $this->config['current'];
-        if (!empty($currentValue)) {
-            $preFilters['relative'] = [
-                'current',
-                'upcoming',
-            ];
-        }
-        $filters += $preFilters;
+		// Get Filters and preFilters
+		$filters = $this->openagendaService->getFilters($this->settings['preFilter'], $this->config['current']);
 
         $from = (isset($arguments['page']) && $arguments['page'] > 0) ? ($arguments['page'] - 1) * (int) $this->settings['eventsPerPage'] : 0;
         $variables['entity'] = json_decode($this->sdk->getAgenda($this->settings['calendarUid']));
@@ -149,56 +139,30 @@ class OpenagendaController extends ActionController
         $filtersUrlPagination = !empty($filtersPagination) ? http_build_query($filtersPagination) : '';
 
         if(!empty($variables['events']['events'])) {
-            $events = $variables['events']['events'];
-            foreach ($events as $key => &$event) {
-                // We use the event's key in the array as index.
-                $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $variables['events']['total'], $filters,$this->settings['calendarUid']);
-
-                // Localize event according to the language set in the node.
-                $this->openagendaHelper->localizeEvent($event, $this->settings['language']);
-
-                // Set Relative timing
-                $event['relative_timing'] = $this->openagendaHelper->processRelativeTimingToEvent($event, $this->settings['language']);
-
-                // Set event local link.
-                $event['local_url'] = $this->openagendaHelper->createEventUrl($event['uid'], $event['slug'], $serialized_context);
-            }
+            $events = $this->openagendaService->processEvents(
+				$variables['events']['events'],
+				$variables['events']['total'],
+				$from,
+				$this->settings['calendarUid'],
+				$this->settings['language'],
+				null,
+				$filters);
         } else {
             $erreur = true;
         }
 
-        $agendaUrlBase = $this->uriBuilder
-            ->reset()
-            ->setLanguage($this->settings['language'])
-            ->buildFrontendUri();
-        $agendaUrl = $agendaUrlBase . '?' . http_build_query($filters);
+		// Agenda URLs
+		$agendaUrlBase = $this->openagendaService->getAgendaURLBase($this->settings['language']);
+		$agendaUrl = $this->openagendaService->getAgendaURLWithFilters($agendaUrlBase, $filters);
 
         // Add pager if needed.
-        $paginator = null;
-        $pagination = null;
-        $currentPage = 0;
-        if (!empty($variables['events']['total'])) {
-            $itemsPerPage = $this->settings['eventsPerPage'];
-            $numberOfEvents = range(0, $variables['events']['total']);
-            $maximumLinks = 6;
-            $currentPage = isset($arguments['page']) ? (int)$arguments['page'] : 1;
-            $paginator = new ArrayPaginator($numberOfEvents, $currentPage, $itemsPerPage);
-            $pagination = new OpenagendaPaginationUtility($paginator, $maximumLinks);
-        }
+		$pagination = $this->openagendaService->getPagination($variables['events']['total'], $this->settings['eventsPerPage'], $arguments['page'] ?? 1);
 
         // AdditionalFields
-        $additionalFields = array();
-        foreach ($variables['entity']->schema->fields as $agendaCustomField) {
-            if (in_array($agendaCustomField->field, explode(';', $this->settings['additionnalFieldFilter']))) {
-                $additionalFields[] = $agendaCustomField->field;
-            }
-        }
+		$additionalFields = $this->openagendaService->getAdditionalFields($variables['entity']->schema->fields, $this->settings['additionnalFieldFilter']);
 
         // Tracking
-        $paramsTracking = '';
-        if($this->settings['suivi']) {
-            $paramsTracking = '&cms=typo3&host=' . $_SERVER['SERVER_NAME'];
-        }
+        $paramsTracking = $this->openagendaService->getParamsTracking($this->settings['suivi']);
 
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);
@@ -217,43 +181,22 @@ class OpenagendaController extends ActionController
         $this->view->assign('additionalFields', $additionalFields);
         $this->view->assign('filtersUrl', $variables['search_string']);
         $this->view->assign('filtersUrlPagination', $filtersUrlPagination);
-        $this->view->assign('pagination', [
-            'paginator' => $paginator,
-            'pagination' => $pagination,
-            'page' => $currentPage,
-        ]);
+        $this->view->assign('pagination', $pagination);
+
         return $this->htmlResponse();
     }
 
-    /**
-     * @throws AspectNotFoundException
-     */
-    public function previewAction(): ResponseInterface
+	/**
+	 * @return ResponseInterface
+	 * @throws AspectNotFoundException
+	 */
+	public function previewAction(): ResponseInterface
     {
         // Get request filters.
         $this->settings['language'] = $this->openagendaHelper->getLanguage($this->settings['language']);
-        $request = $GLOBALS['TYPO3_REQUEST'];
-        $normalizedParams = $request->getAttribute('normalizedParams');
-        parse_str($normalizedParams->getQueryString(), $queryInfo);
 
-        $filters = $queryInfo;
-        $filters += ['detailed' => 1];
-
-        // Remove pager params.
-        unset($filters['type']);
-
-        // Get pre-filters and add them to filters if defined.
-        $preFilters = $this->openagendaHelper->getPreFilters($this->settings['preFilter']);
-
-        // Current & upcoming events only.
-        $currentValue = $this->config['current'];
-        if (!empty($currentValue)) {
-            $preFilters['relative'] = [
-                'current',
-                'upcoming',
-            ];
-        }
-        $filters += $preFilters;
+		// Get Filters and preFilters
+		$filters = $this->openagendaService->getFilters($this->settings['preFilter'], $this->config['current']);
 
         $from = 0;
         $variables['entity'] = json_decode($this->sdk->getAgenda($this->settings['calendarUid']));
@@ -262,34 +205,26 @@ class OpenagendaController extends ActionController
         $events = array();
 
         if(!empty($variables['events']['events'])) {
-            $events = $variables['events']['events'];
-            foreach ($events as $key => &$event) {
-                // We use the event's key in the array as index.
-                $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $variables['events']['total'], $filters, $this->settings['calendarUid']);
-
-                // Localize event according to the language set in the node.
-                $this->openagendaHelper->localizeEvent($event, $this->settings['language']);
-
-                // Set Relative timing
-                $event['relative_timing'] = $this->openagendaHelper->processRelativeTimingToEvent($event, $this->settings['language']);
-
-                // Set event local link.
-                $event['local_url'] = $this->openagendaHelper->createEventUrl($event['uid'], $event['slug'], $serialized_context, $this->settings['agendaPage'], $this->openagendaHelper->getLanguageId(), true);
-            }
+			$events = $this->openagendaService->processEvents(
+				$variables['events']['events'],
+				$variables['events']['total'],
+				$from,
+				$this->settings['calendarUid'],
+				$this->settings['language'],
+				$this->openagendaHelper->getLanguageId(),
+				$filters,
+				$this->settings['agendaPage'],
+			true);
         } else {
             $erreur = true;
         }
 
-        $agendaUrlBase = $this->uriBuilder
-            ->reset()
-            ->buildFrontendUri();
-        $agendaUrl = $agendaUrlBase . '?' . http_build_query($filters);
+		// Agenda URLs
+		$agendaUrlBase = $this->openagendaService->getAgendaURLBase();
+		$agendaUrl = $this->openagendaService->getAgendaURLWithFilters($agendaUrlBase, $filters);
 
         // Tracking
-        $paramsTracking = '';
-        if($this->settings['suivi']) {
-            $paramsTracking = '&cms=typo3&host=' . $_SERVER['SERVER_NAME'];
-        }
+		$paramsTracking = $this->openagendaService->getParamsTracking($this->settings['suivi']);
 
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);
@@ -306,10 +241,12 @@ class OpenagendaController extends ActionController
         return $this->htmlResponse();
     }
 
-    /**
-     * @throws Exception
-     */
-    public function eventAction(): ResponseInterface
+	/**
+	 * @return ResponseInterface
+	 * @throws AspectNotFoundException
+	 * @throws Exception
+	 */
+	public function eventAction(): ResponseInterface
     {
         $arguments = $this->request->getArguments();
         $entities = ['event' => null, 'agenda' => null];
@@ -319,17 +256,14 @@ class OpenagendaController extends ActionController
         $event = json_decode($this->sdk->getEvent($this->settings['calendarUid'], $arguments['uid']), true);
 
         $variables = array();
-        $agendaUrl = null;
 
         $oac = $arguments['oac'];
         $context = !empty($oac) ? $this->openagendaHelper->decodeContext($oac) : [];
         $filters = $context['filters'] ?? [];
 
-        // Agenda link.
-        $agendaUrlBase = $this->uriBuilder
-            ->reset()
-            ->buildFrontendUri();
-        $agendaUrl .= $agendaUrlBase . '?' . http_build_query($filters);
+		// Agenda URLs
+		$agendaUrlBase = $this->openagendaService->getAgendaURLBase();
+		$agendaUrl = $this->openagendaService->getAgendaURLWithFilters($agendaUrlBase, $filters);
 
         // Make sure our index and total values make sense.
         if (isset($context['index']) && isset($context['total'])
@@ -368,10 +302,7 @@ class OpenagendaController extends ActionController
         }
 
         // Tracking
-        $paramsTracking = '';
-        if($this->settings['suivi']) {
-            $paramsTracking = '&cms=typo3&host=' . $_SERVER['SERVER_NAME'];
-        }
+		$paramsTracking = $this->openagendaService->getParamsTracking($this->settings['suivi']);
 
         // Rich Snippet
         $richSnippet = json_encode($this->sdk->getEventRichSnippet($entities['event'], 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REDIRECT_URL'], $this->settings['language']),JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
@@ -392,37 +323,23 @@ class OpenagendaController extends ActionController
         return $this->htmlResponse();
     }
 
-    public function mapFilterAction(): ResponseInterface
+	/**
+	 * @return ResponseInterface
+	 */
+	public function mapFilterAction(): ResponseInterface
     {
-
-
         return $this->htmlResponse();
     }
 
-    public function filtersCallbackAction(): ResponseInterface
+	/**
+	 * @return ResponseInterface
+	 */
+	public function filtersCallbackAction(): ResponseInterface
     {
-        // Get request filters.
-        $preFilters = null;
-        $request = $GLOBALS['TYPO3_REQUEST'];
-        $normalizedParams = $request->getAttribute('normalizedParams');
-        parse_str($normalizedParams->getQueryString(), $queryInfo);
+		// Get Filters and preFilters
+		$filters = $this->openagendaService->getFilters(null, $this->config['current']);
 
-        $filters = $queryInfo;
-        $filters += ['detailed' => 1];
-
-        // Remove type params.
-        unset($filters['type']);
-
-        // Prefilters.
-        $currentValue = $this->config['current'];
-        if (!empty($currentValue)) {
-            $preFilters['relative'] = [
-                'current',
-                'upcoming',
-            ];
-        }
-        $filters += $preFilters;
-
+		$queryInfo = $this->openagendaService->getQueryInfo();
         $agenda = json_decode($this->sdk->getAgenda($queryInfo['settingsOpenagendaCalendarUid']));
         $response = $this->responseFactory->createResponse()
             ->withHeader('Content-Type', 'application/json; charset=utf-8');
@@ -440,45 +357,24 @@ class OpenagendaController extends ActionController
         return $response;
     }
 
-    /**
-     * Handle AJAX calls.
-     *
-     * @return ResponseInterface An Ajax response containing the commands to execute.
-     *   An Ajax response containing the commands to execute.
-     */
+	/**
+	 * Handle AJAX calls.
+	 *
+	 * @return ResponseInterface An Ajax response containing the commands to execute.
+	 *   An Ajax response containing the commands to execute.
+	 * @throws AspectNotFoundException
+	 */
     public function ajaxCallbackAction(): ResponseInterface
     {
-        // Get request filters.
-        $preFilters = [];
-        $request = $GLOBALS['TYPO3_REQUEST'];
-        $normalizedParams = $request->getAttribute('normalizedParams');
-        parse_str($normalizedParams->getQueryString(), $queryInfo);
-
-        $filters = $queryInfo;
-        $filters += ['detailed' => 1];
-
-        // Remove type params.
-        if(isset($filters['reset']) && $filters['reset'] == 1) {
-            unset($filters['tx_openagenda_agenda']);
-        }
-        unset($filters['type']);
-        unset($filters['reset']);
-
-        // Current & upcoming events only.
-        $currentValue = $this->config['current'];
-        if (!empty($currentValue)) {
-            $preFilters['relative'] = [
-                'current',
-                'upcoming',
-            ];
-        }
-        $filters += $preFilters;
+		// Get Filters and preFilters
+		$filters = $this->openagendaService->getFilters(null, $this->config['current'], true);
         $filtersUrl = !empty($filters) ? http_build_query($filters) : '';
 
         $filtersPagination = $filters;
         unset($filtersPagination['tx_openagenda_agenda']['page']);
         $filtersUrlPagination = !empty($filtersPagination) ? http_build_query($filtersPagination) : '';
 
+		$queryInfo = $this->openagendaService->getQueryInfo();
         $agenda = json_decode($this->sdk->getAgenda($queryInfo['settingsOpenagendaCalendarUid']));
 
         $response = $this->responseFactory->createResponse()
@@ -492,28 +388,22 @@ class OpenagendaController extends ActionController
             $entities = $this->openagendaAgendaProcessor->buildRenderArray($queryInfo['settingsOpenagendaCalendarUid'], $agenda, TRUE, $currentPage, $queryInfo['settingsOpenagendaLanguage'], $queryInfo['settingsOpenagendaEventsPerPage'], $queryInfo['settingsOpenagendaColumns'], $queryInfo['settingsOpenagendaPreFilter']);
 
             if(!empty($entities['events'])) {
-                $events = $entities['events'];
-                foreach ($events as $key => &$event) {
-                    // We use the event's key in the array as index.
-                    $serialized_context = $this->openagendaHelper->encodeContext((int)$key + $from, $entities['total'], $filters, $queryInfo['settingsOpenagendaCalendarUid']);
-
-                    // Set Relative timing
-                    $event['relative_timing'] = $this->openagendaHelper->processRelativeTimingToEvent($event, $queryInfo['settingsOpenagendaLanguage']);
-
-                    // Set event local link.
-                    $event['local_url'] = $this->openagendaHelper->createEventUrl($event['uid'], $event['slug'], $serialized_context, $queryInfo['settingsOpenagendaPage'], $queryInfo['settingsOpenagendaLanguageId']);
-                }
+				$events = $this->openagendaService->processEvents(
+					$entities['events'],
+					$entities['total'],
+					$from,
+					$queryInfo['settingsOpenagendaCalendarUid'],
+					$queryInfo['settingsOpenagendaLanguage'],
+					$queryInfo['settingsOpenagendaLanguageId'],
+					$filters,
+					$queryInfo['settingsOpenagendaPage'],
+					false,
+					false
+				);
             }
+
             // Add pager if needed.
-            $paginator = null;
-            $pagination = null;
-            if (!empty($entities['total'])) {
-                $itemsPerPage = $queryInfo['settingsOpenagendaEventsPerPage'];
-                $numberOfEvents = range(0, $entities['total']);
-                $maximumLinks = 6;
-                $paginator = new ArrayPaginator($numberOfEvents, $currentPage, $itemsPerPage);
-                $pagination = new OpenagendaPaginationUtility($paginator, $maximumLinks);
-            }
+			$pagination = $this->openagendaService->getPagination($entities['total'], $queryInfo['settingsOpenagendaEventsPerPage'], $currentPage);
 
             $noEventLabel = LocalizationUtility::translate('noEvent', 'openagenda', array(), $queryInfo['settingsOpenagendaLanguage']);
 
@@ -523,11 +413,7 @@ class OpenagendaController extends ActionController
             $this->view->assign('columns', $queryInfo['settingsOpenagendaColumns']);
             $this->view->assign('filtersUrl', $filtersUrl);
             $this->view->assign('filtersUrlPagination', $filtersUrlPagination);
-            $this->view->assign('pagination', [
-                'paginator' => $paginator,
-                'pagination' => $pagination,
-                'page' => $currentPage,
-            ]);
+            $this->view->assign('pagination', $pagination);
 
             $content = array('content' => $this->view->render('AgendaAjax'));
             
