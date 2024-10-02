@@ -14,6 +14,7 @@ class ItemsProcFunc
      */
     public function user_templateLayout(array &$config)
     {
+        
         $pageId = 0;
 
         $currentColPos = $config['flexParentDatabaseRow']['colPos'] ?? null;
