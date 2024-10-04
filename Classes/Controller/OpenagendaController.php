@@ -145,7 +145,7 @@ class OpenagendaController extends ActionController
 				$from,
 				$this->settings['calendarUid'],
 				$this->settings['language'],
-				null,
+				$this->openagendaHelper->getLanguageId(),
 				$filters);
         } else {
             $erreur = true;
@@ -396,7 +396,8 @@ class OpenagendaController extends ActionController
 					$queryInfo['settingsOpenagendaLanguage'],
 					$queryInfo['settingsOpenagendaLanguageId'],
 					$filters,
-					$queryInfo['settingsOpenagendaPage'],
+					// $queryInfo['settingsOpenagendaPage'],
+					null,
 					false,
 					false
 				);
