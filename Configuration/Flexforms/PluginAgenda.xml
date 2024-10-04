@@ -175,5 +175,31 @@
                 </el>
             </ROOT>
         </vDEF>
+        <template>
+            <ROOT>
+                <sheetTitle>
+                    LLL:EXT:openagenda/Resources/Private/Language/locallang_db.xlf:agenda.template
+                </sheetTitle>
+                <type>array</type>
+                <el>
+					<settings.templateLayout>
+						<TCEforms>
+							<label>LLL:EXT:openagenda/Resources/Private/Language/locallang_db.xlf:agenda.templateLayout</label>
+							<config>
+								<type>select</type>
+								<itemsProcFunc>Openagenda\Openagenda\Hooks\ItemsProcFunc->user_templateLayout</itemsProcFunc>
+								<renderType>selectSingle</renderType>
+								<items>
+									<numIndex index="0" type="array">
+										<numIndex index="0"></numIndex>
+										<numIndex index="1"></numIndex>
+									</numIndex>
+								</items>
+							</config>
+						</TCEforms>
+					</settings.templateLayout>
+                </el>
+            </ROOT>
+        </template>
     </sheets>
 </T3DataStructure>
