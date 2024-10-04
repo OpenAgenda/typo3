@@ -9,6 +9,9 @@
 			<trans-unit id="sheetFilters">
 				<source>Filters</source>
 			</trans-unit>
+			<trans-unit id="sheetTemplate">
+				<source>Template</source>
+			</trans-unit>
 			<trans-unit id="agenda.calendarUid">
 				<source>Openagenda Calendar Uid</source>
 			</trans-unit>
@@ -62,6 +65,12 @@
 			</trans-unit>
 			<trans-unit id="agenda.suivi">
 				<source>I allow OpenAgenda to collect information on the website name and the extension used for statistical purposes only through queries made to its API</source>
+			</trans-unit>
+			<trans-unit id="agenda.templateLayout">
+				<source>Select templateLayouts in the plugin</source>
+			</trans-unit>
+			<trans-unit id="agenda.templateLayout.default">
+				<source>Default</source>
 			</trans-unit>
 			<trans-unit id="preview.eventsInPreview">
 				<source>Number of events in Preview</source>

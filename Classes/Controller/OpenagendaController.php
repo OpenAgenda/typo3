@@ -222,9 +222,9 @@ class OpenagendaController extends ActionController
 		// Agenda URLs
 		$agendaUrlBase = $this->openagendaService->getAgendaURLBase();
 		$agendaUrl = $this->openagendaService->getAgendaURLWithFilters($agendaUrlBase, $filters);
-
+		
         // Tracking
-		$paramsTracking = $this->openagendaService->getParamsTracking($this->settings['suivi']);
+		$paramsTracking = isset($this->settings['suivi']) ? $this->openagendaService->getParamsTracking($this->settings['suivi']) : '';
 
         $this->view->assign('agendaUrlBase', $agendaUrlBase);
         $this->view->assign('agendaUrl', $agendaUrl);

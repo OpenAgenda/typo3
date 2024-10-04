@@ -9,6 +9,9 @@
 			<trans-unit id="sheetFilters">
 				<target>Filtres</target>
 			</trans-unit>
+			<trans-unit id="sheetTemplate">
+				<target>Template</target>
+			</trans-unit>
 			<trans-unit id="agenda.calendarUid">
 				<target>ID du calendrier OpenAgenda</target>
 			</trans-unit>
@@ -62,6 +65,12 @@
 			</trans-unit>
 			<trans-unit id="agenda.suivi">
 				<target>J'autorise OpenAgenda de garder un suivi de l'usage du plugin à des fins statistiques sur les informations suivantes: le cms utilisé, le domaine du site hébergeant l'extension</target>
+			</trans-unit>
+			<trans-unit id="agenda.templateLayout">
+				<target>Sélectionner un templateLayout dans le plugin</target>
+			</trans-unit>
+			<trans-unit id="agenda.templateLayout.default">
+				<target>Par défaut</target>
 			</trans-unit>
 			<trans-unit id="preview.eventsInPreview">
 				<target>Nombre d'événements en Prévisualisation</target>
