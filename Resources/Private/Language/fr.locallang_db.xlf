@@ -63,6 +63,12 @@
 			<trans-unit id="agenda.suivi">
 				<target>J'autorise OpenAgenda de garder un suivi de l'usage du plugin à des fins statistiques sur les informations suivantes: le cms utilisé, le domaine du site hébergeant l'extension</target>
 			</trans-unit>
+			<trans-unit id="agenda.template">
+				<target>Gabarit</target>
+			</trans-unit>
+			<trans-unit id="agenda.templateLayout">
+				<target>Gabarit</target>
+			</trans-unit>
 			<trans-unit id="preview.eventsInPreview">
 				<target>Nombre d'événements en Prévisualisation</target>
 			</trans-unit>
